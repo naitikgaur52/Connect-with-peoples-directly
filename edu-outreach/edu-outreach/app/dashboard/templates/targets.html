@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Target Criteria</h3>
+<p class="text-muted">Controls which job titles and disciplines the scraper looks for on directory pages.</p>
+
+<div class="row">
+  <div class="col-md-6">
+    <h5>Target job titles</h5>
+    <form method="post" class="d-flex gap-2 mb-2">
+      <input type="hidden" name="type" value="title">
+      <input class="form-control" name="keyword" placeholder="e.g. Dean, Department Chair, Program Director" required>
+      <button class="btn btn-primary">Add</button>
+    </form>
+    <ul class="list-group">
+      {% for t in titles %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span class="{{ '' if t.active else 'text-muted text-decoration-line-through' }}">{{ t.keyword }}</span>
+        <span>
+          <form method="post" action="{{ url_for('dashboard.toggle_target', crit_id=t.id) }}" class="d-inline">
+            <button class="btn btn-sm btn-outline-secondary">{{ 'Disable' if t.active else 'Enable' }}</button>
+          </form>
+          <form method="post" action="{{ url_for('dashboard.delete_target', crit_id=t.id) }}" class="d-inline">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-6">
+    <h5>Target disciplines / departments</h5>
+    <form method="post" class="d-flex gap-2 mb-2">
+      <input type="hidden" name="type" value="discipline">
+      <input class="form-control" name="keyword" placeholder="e.g. Computer Science, Nursing, Business" required>
+      <button class="btn btn-primary">Add</button>
+    </form>
+    <ul class="list-group">
+      {% for d in disciplines %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span class="{{ '' if d.active else 'text-muted text-decoration-line-through' }}">{{ d.keyword }}</span>
+        <span>
+          <form method="post" action="{{ url_for('dashboard.toggle_target', crit_id=d.id) }}" class="d-inline">
+            <button class="btn btn-sm btn-outline-secondary">{{ 'Disable' if d.active else 'Enable' }}</button>
+          </form>
+          <form method="post" action="{{ url_for('dashboard.delete_target', crit_id=d.id) }}" class="d-inline">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

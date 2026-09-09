@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Dashboard</h3>
+  <div>
+    <form method="post" action="{{ url_for('dashboard.run_discovery_now') }}" class="d-inline">
+      <button class="btn btn-outline-primary btn-sm">Run discovery now</button>
+    </form>
+    <form method="post" action="{{ url_for('dashboard.toggle_automation') }}" class="d-inline">
+      <button class="btn btn-sm {{ 'btn-success' if paused else 'btn-warning' }}">
+        {{ 'Resume automation' if paused else 'Pause automation' }}
+      </button>
+    </form>
+  </div>
+</div>
+
+{% if paused %}
+<div class="alert alert-warning">Automation is currently <strong>paused</strong>. No emails will be sent and no scheduled scraping will run until you resume.</div>
+{% endif %}
+
+<div class="row g-3">
+  {% for label, key in [
+      ('Total contacts','total_contacts'), ('Eligible now','eligible'),
+      ('Needs review','needs_review'), ('Already contacted','previously_contacted'),
+      ('Institutions tracked','institutions'), ('Emails sent (all time)','emails_sent_total')] %}
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small">{{ label }}</div>
+        <div class="fs-3 fw-bold">{{ stats[key] }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="mt-4">
+  <a href="{{ url_for('dashboard.contacts', status='needs_review') }}" class="btn btn-outline-secondary">Review queue &rarr;</a>
+  <a href="{{ url_for('dashboard.export_xlsx') }}" class="btn btn-outline-secondary">Export all data (Excel) &rarr;</a>
+</div>
+{% endblock %}

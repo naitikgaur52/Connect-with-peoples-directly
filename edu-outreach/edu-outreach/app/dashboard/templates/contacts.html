@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Contacts</h3>
+
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-5">
+    <input type="text" name="q" class="form-control" placeholder="Search name, email, department" value="{{ q }}">
+  </div>
+  <div class="col-md-3">
+    <select name="status" class="form-select">
+      <option value="">All statuses</option>
+      {% for s in all_statuses %}
+      <option value="{{ s }}" {{ 'selected' if s == status else '' }}>{{ s.replace('_',' ') }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-primary w-100">Filter</button>
+  </div>
+  <div class="col-md-2">
+    <a class="btn btn-outline-secondary w-100" href="{{ url_for('dashboard.export_csv') }}">Export CSV</a>
+  </div>
+</form>
+
+<table class="table table-sm table-hover bg-white">
+  <thead><tr>
+    <th>Name</th><th>Title</th><th>Institution</th><th>Email</th><th>Status</th><th>Confidence</th><th>Discovered</th>
+  </tr></thead>
+  <tbody>
+  {% for c in contacts %}
+    <tr>
+      <td><a href="{{ url_for('dashboard.contact_detail', contact_id=c.id) }}">{{ c.name }}</a></td>
+      <td>{{ c.title or '' }}</td>
+      <td>{{ c.institution.name if c.institution else '' }}</td>
+      <td>{{ c.email or '' }}</td>
+      <td><span class="badge bg-secondary status-badge">{{ c.status.replace('_',' ') }}</span></td>
+      <td>{{ "%.2f"|format(c.confidence_score or 0) }}</td>
+      <td>{{ c.date_discovered.strftime('%Y-%m-%d') if c.date_discovered else '' }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="7" class="text-muted">No contacts found yet. Add seed URLs and run discovery to get started.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Exclusions</h3>
+<p class="text-muted">Anything listed here will block outreach automatically &mdash; checked before every send.</p>
+
+<form method="post" class="row g-2 mb-4">
+  <div class="col-md-2">
+    <select name="type" class="form-select" required>
+      {% for t in types %}<option value="{{ t }}">{{ t }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-4"><input class="form-control" name="value" placeholder="Value (e.g. domain, email, name)" required></div>
+  <div class="col-md-4"><input class="form-control" name="reason" placeholder="Reason (optional)"></div>
+  <div class="col-md-2"><button class="btn btn-primary w-100">Add</button></div>
+</form>
+
+<table class="table table-sm bg-white">
+  <thead><tr><th>Type</th><th>Value</th><th>Reason</th><th>Added</th><th></th></tr></thead>
+  <tbody>
+  {% for e in exclusions %}
+    <tr>
+      <td>{{ e.type }}</td><td>{{ e.value }}</td><td>{{ e.reason or '' }}</td>
+      <td>{{ e.created_at.strftime('%Y-%m-%d') }}</td>
+      <td><form method="post" action="{{ url_for('dashboard.delete_exclusion', excl_id=e.id) }}">
+        <button class="btn btn-sm btn-outline-danger">Remove</button></form></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="text-muted">No exclusions yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

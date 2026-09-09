@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Automation Settings</h3>
+<form method="post" class="col-md-6">
+  <div class="mb-3">
+    <label class="form-label">Max emails per day</label>
+    <input type="number" class="form-control" name="max_emails_per_day" value="{{ current['max_emails_per_day'] }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Max emails per month</label>
+    <input type="number" class="form-control" name="max_emails_per_month" value="{{ current['max_emails_per_month'] }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Max contacts emailed per institution</label>
+    <input type="number" class="form-control" name="max_per_institution" value="{{ current['max_per_institution'] }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Cooldown period (days) before re-contacting the same person</label>
+    <input type="number" class="form-control" name="cooldown_days" value="{{ current['cooldown_days'] }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Confidence threshold for automatic sending (0.0 - 1.0)</label>
+    <input type="number" step="0.05" min="0" max="1" class="form-control" name="confidence_threshold" value="{{ current['confidence_threshold'] }}">
+    <div class="form-text">Contacts scraped with lower confidence than this are routed to "Needs Review" instead of sent automatically.</div>
+  </div>
+  <button class="btn btn-primary">Save settings</button>
+</form>
+{% endblock %}

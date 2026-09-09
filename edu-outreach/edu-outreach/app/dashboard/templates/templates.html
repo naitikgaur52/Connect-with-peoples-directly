@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Email Templates</h3>
+<p class="text-muted">Use <code>{{ '{{name}}' }}</code>, <code>{{ '{{title}}' }}</code>, <code>{{ '{{institution}}' }}</code>, <code>{{ '{{department}}' }}</code> as placeholders in subject/body.</p>
+
+<table class="table table-sm bg-white mb-4">
+  <thead><tr><th>Name</th><th>Subject</th><th>Active</th><th></th></tr></thead>
+  <tbody>
+  {% for t in templates %}
+    <tr>
+      <td><a href="{{ url_for('dashboard.template_detail', tmpl_id=t.id) }}">{{ t.name }}</a></td>
+      <td>{{ t.subject }}</td>
+      <td>{{ 'Yes' if t.active else 'No' }}</td>
+      <td></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="4" class="text-muted">No templates yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h5>New template</h5>
+<form method="post">
+  <div class="mb-2"><label class="form-label">Name</label><input class="form-control" name="name" required></div>
+  <div class="mb-2"><label class="form-label">Subject</label><input class="form-control" name="subject" required></div>
+  <div class="mb-2"><label class="form-label">Body</label><textarea class="form-control" name="body" rows="8" required></textarea></div>
+  <button class="btn btn-primary">Create</button>
+</form>
+{% endblock %}

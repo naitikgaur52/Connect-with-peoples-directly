@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Seed URLs</h3>
+<p class="text-muted">Starting pages for the scraper &mdash; e.g. a university's faculty directory or department listing page.</p>
+
+<form method="post" class="row g-2 mb-4">
+  <div class="col-md-6"><input class="form-control" name="url" placeholder="https://example.edu/faculty-directory" required></div>
+  <div class="col-md-4"><input class="form-control" name="institution_name" placeholder="Institution name (optional)"></div>
+  <div class="col-md-2"><button class="btn btn-primary w-100">Add</button></div>
+</form>
+
+<table class="table table-sm bg-white">
+  <thead><tr><th>URL</th><th>Institution</th><th>Active</th><th>Last scraped</th><th>Result</th><th></th></tr></thead>
+  <tbody>
+  {% for s in seeds %}
+    <tr>
+      <td><a href="{{ s.url }}" target="_blank">{{ s.url }}</a></td>
+      <td>{{ s.institution_name or '' }}</td>
+      <td>{{ 'Yes' if s.active else 'No' }}</td>
+      <td>{{ s.last_scraped_at.strftime('%Y-%m-%d %H:%M') if s.last_scraped_at else 'Never' }}</td>
+      <td>{{ s.last_scrape_result or '' }}</td>
+      <td>
+        <form method="post" action="{{ url_for('dashboard.toggle_seed', seed_id=s.id) }}" class="d-inline">
+          <button class="btn btn-sm btn-outline-secondary">{{ 'Disable' if s.active else 'Enable' }}</button>
+        </form>
+        <form method="post" action="{{ url_for('dashboard.delete_seed', seed_id=s.id) }}" class="d-inline">
+          <button class="btn btn-sm btn-outline-danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="text-muted">No seed URLs yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

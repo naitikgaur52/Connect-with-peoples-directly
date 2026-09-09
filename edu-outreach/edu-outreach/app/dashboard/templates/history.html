@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Outreach History</h3>
+<a class="btn btn-outline-secondary btn-sm mb-3" href="{{ url_for('dashboard.export_xlsx') }}">Export full history (Excel)</a>
+
+<table class="table table-sm bg-white">
+  <thead><tr><th>Date</th><th>Contact</th><th>Institution</th><th>Subject</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for log in logs %}
+    <tr>
+      <td>{{ log.sent_at.strftime('%Y-%m-%d %H:%M') if log.sent_at else '' }}</td>
+      <td><a href="{{ url_for('dashboard.contact_detail', contact_id=log.contact_id) }}">{{ log.contact.email if log.contact else '' }}</a></td>
+      <td>{{ log.contact.institution.name if log.contact and log.contact.institution else '' }}</td>
+      <td>{{ log.subject }}</td>
+      <td><span class="badge {{ 'bg-success' if log.status == 'sent' else 'bg-danger' }}">{{ log.status }}</span></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="text-muted">No emails sent yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
